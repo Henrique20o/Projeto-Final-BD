@@ -49,6 +49,11 @@ header {
     border-radius: 50px;
 }
 
-.sair a {
-    color: red;
+.user {
+    display: flex;
+    flex-direction: row;
+}
+
+.user a {
+    margin: 15px 10px 0px 0px;
 }
