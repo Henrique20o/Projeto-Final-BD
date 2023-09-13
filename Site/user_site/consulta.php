@@ -6,7 +6,7 @@ header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
 include('conexao.php');
-    $interesse = $_GET["select"];
+    $interesse = $_POST["select"];
 
         $sql = "SELECT
                     COUNT(CASE WHEN p.curtidas > 100 AND p.curtidas <= 1000 THEN 1 END) AS curtidas_100_1000,
@@ -18,13 +18,12 @@ include('conexao.php');
                 INNER JOIN interesses i ON p.interesse_id = i.ID
                 WHERE i.interesse = :interesse";
 
-        $stmt = $conexao->prepare($sql);
-        $stmt->execute();
-
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        $resultado = $conexao->prepare($$sql);
+        $resultado->execute();
 
         if ($resultado) {
-            $data = [
+            $data2 = [
                 'Entre 100 e 1000' => $resultado['curtidas_100_1000'],
                 'Entre 1000 e 2000' => $resultado['curtidas_1000_2000'],
                 'Entre 2000 e 5000' => $resultado['curtidas_2000_5000'],
@@ -32,8 +31,6 @@ include('conexao.php');
                 'Mais de 10000' => $resultado['curtidas_mais_de_10000']
             ];
 
-            echo json_encode($data);
+            echo json_encode($data2);
                     
         }
-    
-?>

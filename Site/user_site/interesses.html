@@ -69,7 +69,7 @@
 
     <div class="container-fluid form1">
         <h1>Selecione um interesse</h1>
-        <form class="form-floating">
+        <form method="POST" action="consulta.php" class="form-floating">
             <select class="form-select" name="interesses" id="interesses">
                 <option value="Esportes">Esportes</option>
                 <option value="Musica">Música</option>
@@ -87,8 +87,7 @@
                 <option value="Carros">Carros</option>
                 <option value="Politica">Política</option>
             </select>
-            <input onclick="fetchData()" id="submit" type="button" value="ENVIAR">
-            <input onclick="Mostrar()" id="submit" type="button" value="Mostrar">
+            <input onclick="drawChart()" id="submit" type="submit" value="ENVIAR">
         </form>
     </div>
 
