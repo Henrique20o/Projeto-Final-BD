@@ -9,6 +9,14 @@
     <link href="../node_modules/bootstrap/compiler/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style/style.css">
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+    </script>
+
     <title>Hello, world!</title>
 </head>
 
@@ -25,14 +33,16 @@
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title user" id="offcanvasNavbarLabel"><a href="" class="nav-link active">McLovin</a>
-                        <img class="userimg" src="../assets/img/User.jpg"></img></h5><br>
+                    <h5 class="offcanvas-title user" id="offcanvasNavbarLabel"><a href=""
+                            class="nav-link active">McLovin</a>
+                        <img class="userimg" src="../assets/img/User.jpg"></img>
+                    </h5><br>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item">
-                                
+
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="interesses.html">Interesses</a>
@@ -44,7 +54,9 @@
                             <a class="nav-link active" href="postagens.html">Postagens</a>
                         </li><br><br><br><br><br><br>
                         <li class="nav-item">
-                            <a class="nav-link active" href="#"><p class="sair">Sair</p></a>
+                            <a class="nav-link active" href="#">
+                                <p class="sair">Sair</p>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -54,10 +66,69 @@
         </div>
     </header>
 
-    <form action="consulta.php" method="GET"></form>
+    <div class="container-fluid form1">
+        <h1>Selecione um interesse</h1>
+        <form class="form-floating" action="consulta.php" method="GET">
+            <select class="form-select" name="interesses" id="interesses">
+                <option value="Esportes">Esportes</option>
+                <option value="Musica">Música</option>
+                <option value="Viagem">Viagem</option>
+                <option value="Culinaria">Culinária</option>
+                <option value="Tecnologia">Tecnologia</option>
+                <option value="Arte">Arte</option>
+                <option value="Leitura">Leitura</option>
+                <option value="Moda">Moda</option>
+                <option value="Jardinagem">Jardinagem</option>
+                <option value="Fotografia">Fotografia</option>
+                <option value="AnimaisdeEstimacao">Animais de Estimação</option>
+                <option value="Filmes">Filmes</option>
+                <option value="Danca">Dança</option>
+                <option value="Carros">Carros</option>
+                <option value="Politica">Política</option>
+                <input type="button" value="ENVIAR"></input>
+            </select>
+        </form>
+    </div>
 
+    <div id="chart_div"></div>
 
+<?php
 
+$data = [
+  ['Mais de 10.000', $curtidasMaisDe10000],
+  ['Entre 5.000 e 10.000', $curtidasMaisDe5000],
+  ['Entre 1.000 e 5.000', $curtidasMaisDe1000],
+  ['Entre 100 e 1.000', $curtidasMaisDe100],
+  ['Até 100', $totalCurtidas - $curtidasMaisDe100 - $curtidasMaisDe1000 - $curtidasMaisDe5000 - $curtidasMaisDe10000]
+];
+
+?>
+
+<script>
+    function drawChart(data) {
+
+      // formatar dados
+      var datapoints = data.map(item => [item[0], item[1]]);
+
+      // criar e desenhar gráfico 
+      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+      var formattedData = google.visualization.arrayToDataTable(datapoints);
+      chart.draw(formattedData);
+    }
+
+    // quando formulário enviado, buscar dados e desenhar gráfico
+    document.querySelector('form').addEventListener('submit', () => {
+
+      // faz requisição fetch para buscar dados
+      fetch('/consulta.php?interesse=' + document.getElementById('interesses').value)
+        .then(response => response.json())
+        .then(data => {
+          drawChart(data); 
+        });
+
+      return false; // previne envio do formulário  
+    });
+  </script>
 
     <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
