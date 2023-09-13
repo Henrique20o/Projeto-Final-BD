@@ -5,8 +5,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
-require_once('conexao.php');
-    $interesse = $_POST["interesses"];
+include('conexao.php');
+    $interesse = $_GET["select"];
 
         $sql = "SELECT
                     COUNT(CASE WHEN p.curtidas > 100 AND p.curtidas <= 1000 THEN 1 END) AS curtidas_100_1000,
