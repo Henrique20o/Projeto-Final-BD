@@ -118,9 +118,46 @@
 
 ;
             }
+            $interesseSelecionado = $_POST["interesses"];
+
+            // Consulta SQL para contar posts com base nos compartilhamentos e interesse selecionado
+            $sql = "SELECT 
+                        SUM(CASE WHEN compartilhamentos < 100 THEN 1 ELSE 0 END) AS menos_de_100,
+                        SUM(CASE WHEN compartilhamentos > 500 THEN 1 ELSE 0 END) AS mais_de_500,
+                        SUM(CASE WHEN compartilhamentos > 1000 THEN 1 ELSE 0 END) AS mais_de_1000,
+                        SUM(CASE WHEN compartilhamentos > 3000 THEN 1 ELSE 0 END) AS mais_de_3000
+                    FROM postagens p
+                    INNER JOIN interesses i ON p.interesse_id = i.ID
+                    WHERE i.interesse = '$interesseSelecionado'";
+            
+            $result = $conexao->query($sql);
+
+            // Verifique se a consulta foi bem-sucedida
+            if ($result === FALSE) {
+                die("Erro na consulta SQL: " . $conexao->error);
+            }
+
+            // Obtenha os resultados da consulta
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $menosDe100 = $row["menos_de_100"];
+                $maisDe500 = $row["mais_de_500"];
+                $maisDe1000 = $row["mais_de_1000"];
+                $maisDe3000 = $row["mais_de_3000"];
+
+                // Exibir o número de postagens com base nos compartilhamentos
+                echo "<h2>Número de postagens:</h2>";
+                echo "Menos de 100 compartilhamentos: $menosDe100<br>";
+                echo "Mais de 500 compartilhamentos: $maisDe500<br>";
+                echo "Mais de 1000 compartilhamentos: $maisDe1000<br>";
+                echo "Mais de 3000 compartilhamentos: $maisDe3000<br>";
+            } else {
+                echo "Nenhuma postagem encontrada para o interesse selecionado.";
+            }
 
             // Feche a conexão com o banco de dados
             $conexao->close();
+
         }
         ?>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
@@ -150,6 +187,8 @@
 
         chart.draw(data, options);
     }
+
+    
 </script>
 
 </body>
