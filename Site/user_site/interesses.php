@@ -70,23 +70,14 @@
                 <option value="Carros">Carros</option>
                 <option value="Politica">Política</option>
             </select>
-            <input id="submit" type="submit" name="enviar" value="ENVIAR">
+            <input id="submit" class="ui primary button enviar" type="submit" name="enviar" value="ENVIAR">
         </form>
         
         <?php
         // Verifique se o formulário foi submetido
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["enviar"])) {
 
-            // Faça a conexão com o banco de dados (substitua as configurações apropriadas)
-            $server = "localhost";
-            $user = "root";
-            $password = "";
-            $dbname = "rede_social";
-        
-            $conexao = mysqli_connect($server, $user, $password, $dbname);
-            if(!$conexao){
-                die("Houve um erro: " . mysqli_connect_error());
-            }
+            include('conexao.php');
 
             // Receba o interesse selecionado a partir do formulário
             $interesseSelecionado = $_POST["interesses"];
@@ -140,17 +131,11 @@
             // Obtenha os resultados da consulta
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $menosDe100 = $row["menos_de_100"];
-                $maisDe500 = $row["mais_de_500"];
-                $maisDe1000 = $row["mais_de_1000"];
-                $maisDe3000 = $row["mais_de_3000"];
+                $menos100 = $row["menos_de_100"];
+                $mais500 = $row["mais_de_500"];
+                $mais1000 = $row["mais_de_1000"];
+                $mais3000 = $row["mais_de_3000"];
 
-                // Exibir o número de postagens com base nos compartilhamentos
-                echo "<h2>Número de postagens:</h2>";
-                echo "Menos de 100 compartilhamentos: $menosDe100<br>";
-                echo "Mais de 500 compartilhamentos: $maisDe500<br>";
-                echo "Mais de 1000 compartilhamentos: $maisDe1000<br>";
-                echo "Mais de 3000 compartilhamentos: $maisDe3000<br>";
             } else {
                 echo "Nenhuma postagem encontrada para o interesse selecionado.";
             }
@@ -160,7 +145,12 @@
 
         }
         ?>
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    <div class="container-fluid contn">
+        <div id="chart_div" style="width: 450px; height: 250px;"></div>
+        <div id="chart_div2" style="width: 500px; height: 250px;"></div>
+        <div id="chart_div3" style="width: 450px; height: 250px;"></div>
+        <div id="chart_div4" style="width: 450px; height: 250px;"></div>
+    </div>
 
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
@@ -179,8 +169,8 @@
 
         var options = {
             title: 'Estatísticas de Curtidas',
-            width: 900,
-            height: 500
+            width: 500,
+            height: 350
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -188,8 +178,43 @@
         chart.draw(data, options);
     }
 
-    
+    google.charts.load('current', {
+  packages: ['corechart', 'bar']
+});
+
+google.charts.load("current", {packages:['corechart']});
+google.charts.setOnLoadCallback(chartDraw);
+
+    function chartDraw() {
+      var data = google.visualization.arrayToDataTable([
+        ["Seleção", "Quantidade", { role: "style" } ],
+        ["Menos que 100", <?php echo $menos100; ?>, "blue"],
+        ["Mais que 500", <?php echo $mais500; ?>, "blue"],
+        ["Mais que 1000", <?php echo $mais1000; ?>, "blue"],
+        ["Mais 3000", <?php echo $mais3000; ?>, "blue"]
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Quantidade de postagens com compartilhamentos",
+        width: 600,
+        height: 400,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("chart_div2"));
+      chart.draw(view, options);
+    }
+
 </script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
 </body>
 </html>

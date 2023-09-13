@@ -68,6 +68,12 @@ header {
     color: red;
 }
 
+.form1 {
+    display: block;
+    position: relative;
+    margin: auto;
+}
+
 .form1 h1 {
     margin: 20px;
     text-align: center;
@@ -80,4 +86,13 @@ header {
     margin: 20px auto;
     font-size: 20px;
     padding: 10px;
+}
+
+.contn {
+    display: flex;
+    flex-direction: row;
+}
+
+.enviar {
+    
 }
