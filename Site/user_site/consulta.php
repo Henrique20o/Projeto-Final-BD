@@ -1,12 +1,13 @@
 <?php
 header('Content-Type: application/json');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, X-Requested-With');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
 require_once('conexao.php');
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["interesses"])) {
     $interesse = $_POST["interesses"];
 
-    try {
         $sql = "SELECT
                     COUNT(CASE WHEN p.curtidas > 100 AND p.curtidas <= 1000 THEN 1 END) AS curtidas_100_1000,
                     COUNT(CASE WHEN p.curtidas > 1000 AND p.curtidas <= 2000 THEN 1 END) AS curtidas_1000_2000,
@@ -32,11 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["interesses"])) {
             ];
 
             echo json_encode($data);
-        } else {
-            echo "Nenhum resultado encontrado para o interesse '$interesse'.";
+                    
         }
-    } catch (PDOException $e) {
-        echo "Erro na consulta: " . $e->getMessage();
-    }
-}
+    
 ?>
