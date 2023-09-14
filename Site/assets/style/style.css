@@ -183,4 +183,35 @@ header {
     width: 100%;
     background-color: #40b4fc;
     height: 50px;
+    
+}
+
+#form1 {
+    width: 50%;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    margin: auto;
+    margin-top: 50px;
+    background-color: #40b4fc;
+    color: white;
+    border-radius: 30px;
+}
+
+.mb-3 {
+    margin-top: 20px;
+}
+
+.text003 {
+    height: 100px;
+}
+
+.fl2 {
+    display: flex;
+    flex-direction: row;
+}
+
+.bv {
+    text-align: center;
+    margin-top: 20px;
 }
