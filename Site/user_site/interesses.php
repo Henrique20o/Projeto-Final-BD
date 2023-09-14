@@ -9,7 +9,7 @@
     <link href="../node_modules/bootstrap/compiler/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/style/style.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <title>SEN.AI</title>
+    <title>Hello, world!</title>
 </head>
 
 <body>
@@ -49,11 +49,10 @@
         </div>
     </header>
 
-    <div class="form1">
+    <div class="container-fluid form1">
         <h1>Selecione um interesse</h1>
         <form class="form-floating" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-            <select class="form-select" name="interesses" id="interesses" required>
-                <option value="">------</option>
+            <select class="form-select" name="interesses" id="interesses">
                 <option value="Esportes">Esportes</option>
                 <option value="Musica">Música</option>
                 <option value="Viagem">Viagem</option>
@@ -107,6 +106,7 @@
                 $maisDe1500 = $row["mais_de_1500"];
                 $maisDe2000 = $row["mais_de_2000"];;
             }
+            $interesseSelecionado = $_POST["interesses"];
 
             // Consulta SQL para contar posts com base nos compartilhamentos e interesse selecionado
             $sql = "SELECT 
@@ -136,6 +136,14 @@
                 echo "Nenhuma postagem encontrada para o interesse selecionado.";
             }
 
+            $interesseSelecionado = $_POST["interesses"];
+
+            // Inicialize variáveis para contar o número de usuários em cada faixa etária
+            $menor18 = 0;
+            $entre18e24 = 0;
+            $entre25e35 = 0;
+            $maior35 = 0;
+
             // Consulta SQL para obter a quantidade de usuários em cada faixa etária
             $sql = "SELECT 
              idade
@@ -150,12 +158,6 @@
                 die("Erro na consulta SQL: " . $conexao->error);
             }
 
-            // Inicialize variáveis para contar o número de usuários em cada faixa etária
-            $menor18 = 0;
-            $entre18e24 = 0;
-            $entre25e35 = 0;
-            $maior35 = 0;
-
             while ($row = $result->fetch_assoc()) {
                 $idade = $row["idade"];
 
@@ -169,12 +171,15 @@
                     $maior35++;
                 }
             }
+
             // Feche a conexão com o banco de dados
             $conexao->close();
-
+            
         }
         ?>
-        <div class="container contn">
+
+        ?>
+        <div class="container-fluid contn">
             <div id="chart_div" style="width: 450px; height: 250px;"></div>
             <div id="chart_div2" style="width: 500px; height: 250px;"></div>
             <div id="chart_div3" style="width: 450px; height: 250px;"></div>
@@ -210,32 +215,100 @@
             }
 
             google.charts.load('current', {
-        packages: ['corechart']
-    });
-    google.charts.setOnLoadCallback(drawAgeDistributionChart);
+                packages: ['corechart', 'bar']
+            });
 
-    function drawAgeDistributionChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Faixa Etária', 'Número de Usuários'],
-            ['Menor de 18', <?php echo $menor18; ?>],
-            ['18-24', <?php echo $entre18e24; ?>],
-            ['25-35', <?php echo $entre25e35; ?>],
-            ['Maior de 35', <?php echo $maior35; ?>]
-        ]);
+            google.charts.load("current", {
+                packages: ['corechart']
+            });
+            google.charts.setOnLoadCallback(chartDraw);
 
-        var options = {
-            title: 'Distribuição Etária dos Usuários',
-            width: 500,
-            height: 350
-        };
+            function chartDraw() {
+                var data = google.visualization.arrayToDataTable([
+                    ["Seleção", "Quantidade", {
+                        role: "style"
+                    }],
+                    ["Menos que 100", <?php echo $menos100; ?>, "blue"],
+                    ["Mais que 500", <?php echo $mais500; ?>, "blue"],
+                    ["Mais que 1000", <?php echo $mais1000; ?>, "blue"],
+                    ["Mais 3000", <?php echo $mais3000; ?>, "blue"]
+                ]);
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+                var view = new google.visualization.DataView(data);
+                view.setColumns([0, 1,
+                    {
+                        calc: "stringify",
+                        sourceColumn: 1,
+                        type: "string",
+                        role: "annotation"
+                    },
+                    2
+                ]);
 
-        chart.draw(data, options);
-    }
+                var options = {
+                    title: "Quantidade de postagens com compartilhamentos",
+                    width: 600,
+                    height: 400,
+                    bar: {
+                        groupWidth: "95%"
+                    },
+                    legend: {
+                        position: "none"
+                    },
+                };
+                var chart = new google.visualization.ColumnChart(document.getElementById("chart_div2"));
+                chart.draw(view, options);
+            }
+
+            google.charts.load('current', {
+                packages: ['corechart', 'bar']
+            });
+
+            google.charts.load("current", {
+                packages: ['corechart']
+            });
+            google.charts.setOnLoadCallback(chartDraw2);
+
+            function chartDraw2() {
+                var data = google.visualization.arrayToDataTable([
+                    ["Seleção", "Quantidade", {
+                        role: "style"
+                    }],
+                    ["Menores que 18", <?php echo $menor18; ?>, "blue"],
+                    ["Maiores que 18", <?php echo $entre18e24; ?>, "blue"],
+                    ["Maiores de 24", <?php echo $entre25e35; ?>, "blue"],
+                    ["Maiores de 35", <?php echo $maior35; ?>, "blue"]
+                ]);
+
+                var view = new google.visualization.DataView(data);
+                view.setColumns([0, 1,
+                    {
+                        calc: "stringify",
+                        sourceColumn: 1,
+                        type: "string",
+                        role: "annotation"
+                    },
+                    2
+                ]);
+
+                var options = {
+                    title: "Idade dos usuários interessados",
+                    width: 600,
+                    height: 400,
+                    bar: {
+                        groupWidth: "95%"
+                    },
+                    legend: {
+                        position: "none"
+                    },
+                };
+                var chart = new google.visualization.ColumnChart(document.getElementById("chart_div3"));
+                chart.draw(view, options);
+            }
+
         </script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
-    </div>
+
 </body>
 
 </html>
