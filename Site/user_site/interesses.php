@@ -171,19 +171,64 @@
                     $maior35++;
                 }
             }
+            // Verifique se o formulário foi submetido
+            {
 
+
+                // Receba o interesse selecionado a partir do formulário
+                $interesseSelecionado = $_POST["interesses"];
+
+                // Consulta SQL para contar publicações por região (Nordeste, Sudeste, etc.)
+                $sql = "SELECT
+                            SUM(CASE WHEN u.localizacao = 'Nordeste' THEN 1 ELSE 0 END) AS nordeste,
+                            SUM(CASE WHEN u.localizacao = 'Sudeste' THEN 1 ELSE 0 END) AS sudeste,
+                            SUM(CASE WHEN u.localizacao = 'Sul' THEN 1 ELSE 0 END) AS sul,
+                            SUM(CASE WHEN u.localizacao = 'Norte' THEN 1 ELSE 0 END) AS norte,
+                            SUM(CASE WHEN u.localizacao = 'Centro-Oeste' THEN 1 ELSE 0 END) AS centroOeste
+                        FROM
+                            usuarios u
+                        INNER JOIN
+                            postagens p ON u.id = p.user_id
+                        WHERE
+                            p.interesse_id = (SELECT id FROM interesses WHERE interesse = '$interesseSelecionado')";
+
+                $result = $conexao->query($sql);
+
+                // Verifique se a consulta foi bem-sucedida
+                if ($result === FALSE) {
+                    die("Erro na consulta SQL: " . $conexao->error);
+                }
+
+                // Obtenha os resultados da consulta
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $nordeste = $row["nordeste"];
+                    $sudeste = $row["sudeste"];
+                    $sul = $row["sul"];
+                    $norte = $row["norte"];
+                    $centroOeste = $row["centroOeste"];
+                }
+                // Feche a conexão com o banco de dados
+            }
             // Feche a conexão com o banco de dados
             $conexao->close();
-            
         }
         ?>
-
-        ?>
-        <div class="container-fluid contn">
-            <div id="chart_div" style="width: 450px; height: 250px;"></div>
-            <div id="chart_div2" style="width: 500px; height: 250px;"></div>
-            <div id="chart_div3" style="width: 450px; height: 250px;"></div>
-            <div id="chart_div4" style="width: 450px; height: 250px;"></div>
+        <div class="container mt-5">
+            <div class="row" class="container mt-5">
+                <div class="col-md-6">
+                    <div id="chart_div" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="chart_div2" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="chart_div3" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="chart_div4" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
         </div>
 
         <script type="text/javascript">
@@ -205,8 +250,8 @@
 
                 var options = {
                     title: 'Estatísticas de Curtidas',
-                    width: 500,
-                    height: 350
+                    width: 600,
+                    height: 400
                 };
 
                 var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -304,8 +349,35 @@
                 };
                 var chart = new google.visualization.ColumnChart(document.getElementById("chart_div3"));
                 chart.draw(view, options);
-            }
 
+                google.charts.load('current', {
+                    'packages': ['corechart']
+                });
+                google.charts.setOnLoadCallback(drawChart2);
+
+                function drawChart2() {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Localização');
+                    data.addColumn('number', 'Quantidade');
+                    data.addRows([
+                        ['Nordeste', <?php echo $nordeste; ?>],
+                        ['Sudeste', <?php echo $sudeste; ?>],
+                        ['Sul', <?php echo $sul; ?>],
+                        ['Norte', <?php echo $norte; ?>],
+                        ['Centro-Oeste', <?php echo $centroOeste; ?>]
+                    ]);
+
+                    var options = {
+                        title: 'Estatísticas de Curtidas',
+                        width: 500,
+                        height: 350
+                    };
+
+                    var chart = new google.visualization.PieChart(document.getElementById('chart_div4'));
+
+                    chart.draw(data, options);
+                }
+            }
         </script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
