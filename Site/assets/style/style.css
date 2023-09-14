@@ -5,12 +5,16 @@
 }
 
 html, body {
-    font-family: 'Poppins', sans-serif;;
+    width: 100%;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    margin: 0px;
+    padding: 0px;
 }
 
-.h1 {
+header .h1 {
     font-size: 35px;
-    color: rgb(23, 142, 240);
+    color: rgb(255, 255, 255);
 }
 
 .nav-item {
@@ -18,16 +22,32 @@ html, body {
 }
 
 .butn {
-    width: 120px;
+    width: 140px;
     height: 40px;
     font-size: 19px;
-    margin-left: 5px;
-    box-shadow: 3px 3px 5px rgb(134, 134, 134);
+    margin-left: 10px;
     font-weight: 600;
+    color:#40b4fc;
 }
 
 header {
+    background-color: #40b4fc;
     box-shadow: 0px 0px 20px rgb(134, 134, 134);
+}
+
+.link-light {
+    margin: 15px;
+    text-decoration: none;
+    font-size: 19px;
+}
+
+.aaa-nav {
+    margin-top: 10px;
+}
+
+.aaa {
+    display: block;
+    margin-top: 5px;
 }
 
 .img-1 {
@@ -36,7 +56,7 @@ header {
 
 .img-1 img {
     width: 100%;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .marcas {
@@ -45,7 +65,7 @@ header {
 }
 
 .marcas-img img {
-    width: 110px;
+    width: 90px;
     margin: 20px 50px 20px 50px;
 }
 
@@ -70,8 +90,9 @@ header {
 
 .form1 {
     display: block;
-    position: relative;
+    width: 70%;
     margin: auto;
+    text-align: center;
 }
 
 .form1 h1 {
@@ -80,7 +101,7 @@ header {
 }
 
 .form1 #interesses {
-    width: 50%;
+    width: 65%;
     text-align: center;
     position: relative;
     margin: 20px auto;
@@ -94,5 +115,72 @@ header {
 }
 
 .enviar {
-    
+    width: 30%;
+    height: 50px;
+}
+
+.sobre {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    background-color: #40b4fc;
+    height: auto;
+    margin: 40px 0;
+}
+
+.sobre h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.subli {
+    background-color: white;
+    height: 10px;
+    width: 100px;
+    margin: 0 auto;
+}
+
+.subli2 {
+    background-color: white;
+    height: 10px;
+    width: 230px;
+    margin: 0 auto;
+}
+
+.txt {
+    text-align: justify;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    width: 60%;
+}
+
+.flx {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.img002 {
+    width: 90%;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+.txt2 {
+    text-align: justify;
+    font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    width: 95%;
+}
+
+.div1 {
+    margin-top: 20px;
+}
+
+.foot {
+    width: 100%;
+    background-color: #40b4fc;
+    height: 50px;
 }
