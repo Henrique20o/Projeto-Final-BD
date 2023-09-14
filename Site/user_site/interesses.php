@@ -30,7 +30,7 @@
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                         <li class="nav-item"></li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="interesses.html">Interesses</a>
+                            <a class="nav-link active" href="interesses.php">Interesses</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="usuarios.html">Usuários</a>
@@ -52,7 +52,8 @@
     <div class="container-fluid form1">
         <h1>Selecione um interesse</h1>
         <form class="form-floating" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-            <select class="form-select" name="interesses" id="interesses">
+            <select class="form-select" name="interesses" id="interesses" required>
+                <option value="">------</option>
                 <option value="Esportes">Esportes</option>
                 <option value="Musica">Música</option>
                 <option value="Viagem">Viagem</option>
